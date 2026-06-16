@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Tus Temarios</h1>
+    <p>Crea y organiza tus flashcards por asignaturas.</p>
+</div>
+
+<div class="syllabus-grid">
+    <!-- Form to add new syllabus -->
+    <div class="card add-card glassmorphism">
+        <h2>Crear Nuevo Temario</h2>
+        <form action="{{ url_for('add_syllabus') }}" method="POST">
+            <input type="text" name="name" placeholder="Ej: Matemáticas Avanzadas" required class="input-text">
+            <button type="submit" class="btn btn-primary">Crear</button>
+        </form>
+    </div>
+
+    <!-- List of existing syllabuses -->
+    {% for syllabus in syllabuses %}
+    <div class="card syllabus-card glassmorphism">
+        <h2>{{ syllabus.name }}</h2>
+        <p>{{ syllabus.flashcards|length }} flashcards</p>
+        <div class="card-actions">
+            <a href="{{ url_for('syllabus_view', syllabus_id=syllabus.id) }}" class="btn btn-secondary">Ver Flashcards</a>
+            <a href="{{ url_for('study', syllabus_id=syllabus.id) }}" class="btn btn-success">Estudiar</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

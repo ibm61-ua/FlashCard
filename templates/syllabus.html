@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>Temario: {{ syllabus.name }}</h1>
+    <a href="{{ url_for('index') }}" class="back-link">← Volver a Temarios</a>
+</div>
+
+<div class="action-bar glassmorphism">
+    <h2>Añadir Nueva Flashcard</h2>
+    <form action="{{ url_for('add_flashcard', syllabus_id=syllabus.id) }}" method="POST" class="add-flashcard-form">
+        <textarea name="question" placeholder="Escribe la pregunta aquí..." required class="input-textarea"></textarea>
+        <textarea name="answer" placeholder="Escribe la respuesta aquí..." required class="input-textarea"></textarea>
+        <button type="submit" class="btn btn-primary">Guardar Flashcard</button>
+    </form>
+</div>
+
+<div class="flashcards-list">
+    <h2>Tus Flashcards ({{ syllabus.flashcards|length }})</h2>
+    {% if syllabus.flashcards %}
+        <div class="flashcard-grid">
+            {% for card in syllabus.flashcards %}
+            <div class="card mini-card glassmorphism">
+                <div class="q-badge">Q</div>
+                <p class="question-text">{{ card.question }}</p>
+                <div class="a-badge">A</div>
+                <p class="answer-text">{{ card.answer }}</p>
+                <a href="{{ url_for('edit_flashcard', syllabus_id=syllabus.id, flashcard_id=card.id) }}" class="btn btn-secondary btn-edit">Editar</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-state">No has añadido ninguna flashcard a este temario todavía.</p>
+    {% endif %}
+</div>
+{% endblock %}

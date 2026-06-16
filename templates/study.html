@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section study-header">
+    <h1>Estudiando: {{ syllabus.name }}</h1>
+    <a href="{{ url_for('index') }}" class="back-link">← Salir</a>
+</div>
+
+{% if error %}
+    <div class="glassmorphism error-box">
+        <p>{{ error }}</p>
+    </div>
+{% else %}
+    <div class="study-layout">
+        <div class="flashcard-column">
+            <!-- Contenedor 3D para la animación -->
+            <div class="scene">
+                <div class="flashcard-container" id="flashcard-element">
+                    <!-- Cara Frontal (Pregunta) -->
+                    <div class="flashcard-face flashcard-front">
+                        <h3 class="face-title">Pregunta</h3>
+                        <p id="current-question" class="study-text">Cargando...</p>
+                    </div>
+                    <!-- Cara Trasera (Respuesta) -->
+                    <div class="flashcard-face flashcard-back">
+                        <h3 class="face-title">Respuesta Correcta</h3>
+                        <p id="current-answer" class="study-text">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-info">
+                Cartas vistas en esta sesión: <span id="session-count">0</span>
+            </div>
+        </div>
+
+        <div class="interaction-column user-interaction">
+            <textarea id="user-answer" class="input-textarea" placeholder="Escribe tu respuesta aquí..."></textarea>
+            
+            <!-- Botones -->
+            <div class="study-controls">
+                <button id="btn-flip" class="btn btn-primary btn-large">Girar Flashcard</button>
+                <div id="evaluation-controls" style="display: none;">
+                    <p class="eval-prompt">¿Acertaste?</p>
+                    <button id="btn-next" class="btn btn-success btn-large">Siguiente Flashcard ➔</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inject data safely into JS -->
+    <script>
+        const flashcards = {{ syllabus.flashcards|tojson }};
+        let currentCardIndex = -1;
+        let sessionCount = 0;
+
+        const questionEl = document.getElementById('current-question');
+        const answerEl = document.getElementById('current-answer');
+        const cardEl = document.getElementById('flashcard-element');
+        const flipBtn = document.getElementById('btn-flip');
+        const nextBtn = document.getElementById('btn-next');
+        const evalControls = document.getElementById('evaluation-controls');
+        const userAnswerEl = document.getElementById('user-answer');
+        const sessionCountEl = document.getElementById('session-count');
+
+        function loadRandomCard() {
+            // Pick a random card
+            const randomIndex = Math.floor(Math.random() * flashcards.length);
+            currentCardIndex = randomIndex;
+            
+            // Set text
+            questionEl.textContent = flashcards[currentCardIndex].question;
+            answerEl.textContent = flashcards[currentCardIndex].answer;
+            
+            // Reset UI state
+            cardEl.classList.remove('is-flipped');
+            userAnswerEl.value = '';
+            userAnswerEl.disabled = false;
+            flipBtn.style.display = 'inline-block';
+            evalControls.style.display = 'none';
+        }
+
+        flipBtn.addEventListener('click', () => {
+            // Flip the card
+            cardEl.classList.add('is-flipped');
+            
+            // Disable input and update buttons
+            userAnswerEl.disabled = true;
+            flipBtn.style.display = 'none';
+            evalControls.style.display = 'block';
+            
+            sessionCount++;
+            sessionCountEl.textContent = sessionCount;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            loadRandomCard();
+        });
+
+        // Load first card on init
+        if(flashcards.length > 0) {
+            loadRandomCard();
+        }
+    </script>
+{% endif %}
+{% endblock %}

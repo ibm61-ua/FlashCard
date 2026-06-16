@@ -1,0 +1,53 @@
+[
+    {
+        "id": "7fa61001-f8f4-4c76-aaf6-9111a8175f7f",
+        "name": "Seguridad SD",
+        "flashcards": [
+            {
+                "id": "8a27e07a-bb9c-4a7d-80d5-1f7eda43b023",
+                "question": "El Canal Inseguro, sus Amenazas, y la solucion (Criptografía)",
+                "answer": "La red es un entorno hostil donde un adversario puede:\r\n- Interceptar la comunicación, violando la Confidencialidad. El ataque pasivo de escucha (sniffing) es el más simple y viola la privacidad, simplemente observa el tráfico.\r\n- Modificar o falsificar mensajes, violando la integridad. Los ataque activos como MITM no solo escucha, sino que altera o inyecta mensajes falsos, rompiendo la integridad de la comunicación.\r\n- Interrumipir el servicio, afectando la Disponibilidad. Los ataques de DoS tienen como objetivo hacer que un recurso no este disponible para sus usuarios.\r\n\r\nAmenzas modernas:\r\n- Malware\r\n- Phishing: Suplantación de identidad para robar tus datos\r\n- Vishing: Suplantación de voz\r\n-Reversing: Decompilar software para encontrar secretos o vulnerabilidades\r\n-Zero-day\r\n\r\nUn canal seguro debe contar con las siguientes propiedades:\r\n\r\n- Autenticacion mutua: cada proceso esta seguro de la identidad del otro\r\n- Confidencialidad e Integridad: los datos son privadodos y protegidos contra la manipulación\r\n- Protección contra repeticiones\r\n\r\nEl objetivo es usar criptografía para construir un canal seguro sobre el medio inseguro."
+            },
+            {
+                "id": "251cfc61-4945-41e0-a154-a61f2e84847a",
+                "question": "Criptografía Simétrica: La Clave Secreata Compartida",
+                "answer": "Utiliza una única clave secreta tanto para cifrar como para descrifrar la información. Es fundamental que tanto el emisor como el receptor conozcan esta clave de antemano y la mantengan en secreto.\r\n\r\nEl concepto clave es el siguiente: Un único secreto compartido (Ks) se usa tanto para cifrar como para descifrar. Es como si dos mismas personas usaran la misma llave física para una caja fuerte.\r\n\r\nEjemplos de algoritmos simetricos:\r\n-DES: clave de 56 bits, insegura\r\n-3DES: aplica tres veces DES, es lento\r\n-AES: Admite claves de 128, 192 y 256 bits, excelente balance de seguridad y rendimiento.\r\n\r\nEl problema es la distribución de claves:\r\nEn un sistema con N nodos, si cada par de nodos necesita comunicarse de forma segura usando criptografía simetrica, se necesitan  N(N-1) / 2 claves secretas distintas.\r\nPara establecer un canal seguro, necesitamos una clave secreta y para enviar la clave secreta, necesitamos un canal seguro."
+            },
+            {
+                "id": "1bb65366-0ea5-443b-a88e-e94cd3c1fc95",
+                "question": "Tercero de Confianza (KDC)",
+                "answer": "El KDC es un servidor de confianza que comparte una clave maestra única con cada usuario (Ka, Kb) y genera claves de sesión (Ks) temporales.\r\n\r\nSu funcionamiento es el siguiente:\r\n\r\nPasos 1-2: Alice solicita una clave. El KDC le devuelve Ks y un \"ticket para Bob\",  todo cifrado con la clave de Alice (Ka)\r\nPaso 3: El ticket contiene la clave de sisión y la identidad de Alice, pero cifrado con la clave de Bob. Alice no puede leerlo, solo reenviarselo a Bob.\r\n\r\nProblema:\r\nAtaque de repeticion: Eve intercepta el ticket. Como no tiene fecha de caducidad, puede reenviarselo a Bob mas tarde para suplantar a alice e iniciar una sesion fraudulenta.\r\n\r\nPara solucionar esto se a˜naden Nonces, que son numeros aleatorios de un solo uso, para segurar que los mensajes son recientes. Un reto-respuesta final confirma que ambas partes poseen la clave de sesión."
+            },
+            {
+                "id": "14f87136-6046-428a-921e-430541355e92",
+                "question": "Criptografia Asimetrica: La Magia de las Dos claves",
+                "answer": "La criptografía de clave pública utiliza un par de claves matemáticamente relacionadas (pública y privada). Se basa en la funcion de puerta trampa: una funcion matematica que es facil de calcular en una direccion, pero muy dificil de revertir sin una informacion secreta.\r\n\r\n- Clave publica: se distribuye libremente. Cualquiera puede tenerla. Se usa para cifrar mensajes o verificar firmas.\r\n- Clave privada: Es secreata y solo el propietario la conoce. Se usa para descifrar mensajes o crear firmas.\r\n\r\nAlgoritmos comunes:\r\n-RSA: bsado en la dificultad de factorizar numeros grandes\r\n-ECC: misma seguridad que RSA pero con claves mas cortas\r\n\r\nResuelve el problema de la distribución de claves, sin embargo, es mucho mas cotosa computacionalmente, por lo que a menudo se usa para intercambiar una clave de sesión simetrica y luego seguir con criptografia simetrica."
+            },
+            {
+                "id": "ba7a4737-8a40-4cb3-a865-23d2e390183b",
+                "question": "Sistemas Criptográficos Híbridos",
+                "answer": "Se utiliza criptografía asimetrica solo al principio para autenticación e intercambio seguro de claves. Después se usa la simétrica para cifrar todo el resto de la comunicación.\r\n\r\nTiene como ventajas que el cifrado simetrico es mucho mas rapido y seguridad al arranque gracias al cifrado asimetrico para distribuir las claves."
+            },
+            {
+                "id": "e78a3a10-00d3-4d4d-a855-bd621b33b69b",
+                "question": "SSL/TLS Handshake\r\n",
+                "answer": "El objetivo de SSL/TLS es crear un canal seguro sobre uno inseguro.\r\n\r\nLos pasos para SSL/TLS handshake son los siguientes:\r\n\r\n1. (ClientHello) El cliente inicia la conexión indicando las versiones TLS y los algoritmos de cifrado que soporta.\r\n2.(ServerHello) El servidor elige la versión TLS y el algoritmo más fuerte compatible con el cliente. El cliente verifica su autenticidad consultado una Autoridad de Certificacion (CA) de confianza.\r\n3. (ClientKeyExchange) El cliente genera un secreto temporal, lo cifra con la clave pública del servidor y lo envía, a partir de este secreto calculan de forma independiente la misma clave de sesión simétrica.\r\n4.(Finished) Cliente y servidor intercambian mensajes finales de comprobación."
+            },
+            {
+                "id": "3c77d222-fe6f-4463-a27e-35e4ba43f57c",
+                "question": "El problema de la confianza y su solucion: Clave Pública PKI",
+                "answer": "La criptografía asimétrica por si sola no resuelve el problema de la confianza. Es donde entra un tercero de confianza, Autoridad de Certificacion (CA), que verifica la identidad del propietario de la clave pública y la firma digitalmente. El resultado es un Certificado Digital."
+            },
+            {
+                "id": "f3ace7ff-acb6-4ad0-bd08-4fe7a907ade5",
+                "question": "Funcion Hash",
+                "answer": "Una funcion Hash H es un algoritmo que convierte una entrada de tamanyo arbitario es una salida de tamanyo fijo. A esta salida se le llama hash, resumen o huella digital. \r\nLas propiedades de la funcion hash son las siguientes:\r\n- Velocidad: Deben ser rápidos en calcular el valor de hash para una entrada dada\r\n- Determinismo: la funcion de HASH siempre devuelve la misma salida para una entrada dada y del mismo tamanyo\r\n- Resistencia a pre-imagen: A partir de un valor de hash de un mensaje es imposible obtener el mensaje original.\r\n- Resistencia a la colisión: Muy dificil encontrar a priori dos mensajes distintos que coincidan en el mismo hash.\r\n- Efecto avalancha: Un minimo cambio en la entrada provoca un cambio masivo en la salida.\r\n\r\nAplicaciones:\r\n- Almacenamiento de contrasenyas, firma digital, proteccion de la propiedad intelectual, peritajes informaticos, deteccion de malware, comprobacion de descargar en internet, blockchain, transferencia de archivos.\r\n\r\nPrincipales algoritmos: MD5, SHA1, SHA256, SHA512, SHA-3"
+            },
+            {
+                "id": "7bbe5b1b-d5c2-416b-9a04-a6486b65949b",
+                "question": "El ataque de cumpleanyos",
+                "answer": "La paradoja: En una sala con solo 23 personas, hay más de un 50% de probabilidad de que dos de ellas cumplan el mismo día.\r\nEl ataque: Un atacante no necesita encontrar un mensaje que coincida con el hash de un documento específico, sino encontrar dos mensajes cualesquiera que produzcan el mismo hash.\r\nPara un hash de nbits, un ataque por fuerza bruta se asocia a 2^n intentos, pero para encontrar una colision por ataque de cumpleanyos el coste baja a 2^(n/2)\r\n\r\nEjemplo: Falsificación de un Contrato:\r\n\r\nEve (atacante) quiere que Bob (víctima) firme un contrato fraudulento.\r\npaso1: Eve prepara un contrato legitimo (M1) y uno fraudulento (M2)\r\nPASO2: Eve genera millones de variantes de ambos contratos com cambios sutiles e invisibles.\r\nPaso3: Por la probabilidad de cumpleanyos, Eve encuentra una versiones de M1 y de M2 que tienen el mismo hash."
+            }
+        ]
+    }
+]
