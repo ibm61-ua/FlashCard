@@ -40,7 +40,7 @@ body {
 
 /* Typography & Layout */
 a { text-decoration: none; color: inherit; }
-.container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.container { max-width: 1600px; margin: 0 auto; padding: 2rem; }
 
 .navbar {
     background: rgba(15, 23, 42, 0.8);
@@ -139,7 +139,7 @@ a { text-decoration: none; color: inherit; }
 
 /* 3D Flashcard Study Mode */
 .study-layout {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
@@ -230,3 +230,96 @@ a { text-decoration: none; color: inherit; }
 #user-answer { flex-grow: 1; min-height: 250px; }
 .eval-prompt { text-align: center; margin-bottom: 1rem; font-size: 1.2rem; font-weight: 600; }
 .progress-info { text-align: center; margin-top: 2rem; color: var(--text-secondary); }
+
+/* Pomodoro */
+.pomodoro-container {
+    position: fixed;
+    top: 6rem;
+    right: 2rem;
+    width: 300px;
+    z-index: 1000;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    max-height: 500px;
+}
+
+.pomodoro-container.minimized {
+    max-height: 54px;
+}
+
+.pomodoro-header {
+    background: rgba(15, 23, 42, 0.9);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.pomo-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.pomodoro-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pomodoro-timer {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+}
+
+.pomodoro-controls {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.pomodoro-controls .btn {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.pomodoro-settings {
+    width: 100%;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 1rem;
+}
+
+.pomo-input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.pomo-input-group label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.pomo-input-group .input-text {
+    width: 80px;
+    padding: 0.5rem;
+    margin-bottom: 0;
+}

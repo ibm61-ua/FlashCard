@@ -25,7 +25,12 @@
                 <p class="question-text">{{ card.question }}</p>
                 <div class="a-badge">A</div>
                 <p class="answer-text">{{ card.answer }}</p>
-                <a href="{{ url_for('edit_flashcard', syllabus_id=syllabus.id, flashcard_id=card.id) }}" class="btn btn-secondary btn-edit">Editar</a>
+                <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                    <a href="{{ url_for('edit_flashcard', syllabus_id=syllabus.id, flashcard_id=card.id) }}" class="btn btn-secondary" style="flex: 1; text-align: center;">Editar</a>
+                    <form action="{{ url_for('delete_flashcard', syllabus_id=syllabus.id, flashcard_id=card.id) }}" method="POST" style="flex: 1; display: flex;" onsubmit="return confirm('¿Seguro que quieres eliminar esta flashcard?');">
+                        <button type="submit" class="btn" style="flex: 1; background-color: rgba(239, 68, 68, 0.8); color: white; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#ef4444'" onmouseout="this.style.backgroundColor='rgba(239, 68, 68, 0.8)'">Eliminar</button>
+                    </form>
+                </div>
             </div>
             {% endfor %}
         </div>

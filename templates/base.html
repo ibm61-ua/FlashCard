@@ -6,7 +6,7 @@
     <title>Flashcards de Estudio</title>
     <!-- Google Fonts for modern typography -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=5">
 </head>
 <body>
     <nav class="navbar">
@@ -17,5 +17,162 @@
     <main class="container">
         {% block content %}{% endblock %}
     </main>
+
+    <!-- Pomodoro Widget -->
+    <div id="pomodoro-widget" class="pomodoro-container minimized">
+        <div class="pomodoro-header" id="pomo-header-area">
+            <span id="pomo-title">⏱️ Pomodoro (<span id="pomo-mode">Trabajo</span>)</span>
+            <button id="pomo-toggle" class="pomo-btn">▲</button>
+        </div>
+        <div id="pomo-body" class="pomodoro-body">
+            <div id="pomo-timer" class="pomodoro-timer">25:00</div>
+            
+            <div class="pomodoro-controls">
+                <button id="pomo-start-pause" class="btn btn-primary">Iniciar</button>
+                <button id="pomo-reset" class="btn btn-secondary">↻</button>
+                <button id="pomo-settings-btn" class="btn btn-secondary">⚙️</button>
+            </div>
+
+            <div id="pomo-settings" class="pomodoro-settings" style="display: none;">
+                <div class="pomo-input-group">
+                    <label>Trabajo (min):</label>
+                    <input type="number" id="pomo-work-min" value="25" min="1" max="90" class="input-text">
+                </div>
+                <div class="pomo-input-group">
+                    <label>Descanso (min):</label>
+                    <input type="number" id="pomo-break-min" value="5" min="1" max="30" class="input-text">
+                </div>
+                <button id="pomo-save" class="btn btn-success" style="width: 100%; margin-top: 0.5rem;">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let workTime = 25 * 60;
+            let breakTime = 5 * 60;
+            let timeLeft = workTime;
+            let isRunning = false;
+            let isWorkMode = true;
+            let timerInterval = null;
+
+            const timerDisplay = document.getElementById('pomo-timer');
+            const modeDisplay = document.getElementById('pomo-mode');
+            const startPauseBtn = document.getElementById('pomo-start-pause');
+            const resetBtn = document.getElementById('pomo-reset');
+            const settingsBtn = document.getElementById('pomo-settings-btn');
+            const settingsPanel = document.getElementById('pomo-settings');
+            const saveBtn = document.getElementById('pomo-save');
+            const workInput = document.getElementById('pomo-work-min');
+            const breakInput = document.getElementById('pomo-break-min');
+            const toggleBtn = document.getElementById('pomo-toggle');
+            const container = document.getElementById('pomodoro-widget');
+            const header = document.getElementById('pomo-header-area');
+
+            function updateDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function playAlert() {
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.5);
+                } catch (e) {
+                    console.log("Audio not supported or blocked");
+                }
+            }
+
+            function toggleTimer() {
+                if (isRunning) {
+                    clearInterval(timerInterval);
+                    startPauseBtn.textContent = "Iniciar";
+                    startPauseBtn.classList.remove('btn-secondary');
+                    startPauseBtn.classList.add('btn-primary');
+                } else {
+                    startPauseBtn.textContent = "Pausar";
+                    startPauseBtn.classList.remove('btn-primary');
+                    startPauseBtn.classList.add('btn-secondary');
+                    timerInterval = setInterval(() => {
+                        if (timeLeft > 0) {
+                            timeLeft--;
+                            updateDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            isRunning = false;
+                            startPauseBtn.textContent = "Iniciar";
+                            startPauseBtn.classList.remove('btn-secondary');
+                            startPauseBtn.classList.add('btn-primary');
+                            
+                            isWorkMode = !isWorkMode;
+                            modeDisplay.textContent = isWorkMode ? "Trabajo" : "Descanso";
+                            timerDisplay.style.color = isWorkMode ? "var(--accent)" : "var(--success)";
+                            timeLeft = isWorkMode ? workTime : breakTime;
+                            updateDisplay();
+                            
+                            playAlert();
+                            alert(isWorkMode ? "¡Hora de trabajar!" : "¡Descanso terminado, buen trabajo!");
+                        }
+                    }, 1000);
+                }
+                isRunning = !isRunning;
+            }
+
+            function resetTimer() {
+                clearInterval(timerInterval);
+                isRunning = false;
+                startPauseBtn.textContent = "Iniciar";
+                startPauseBtn.classList.remove('btn-secondary');
+                startPauseBtn.classList.add('btn-primary');
+                timeLeft = isWorkMode ? workTime : breakTime;
+                updateDisplay();
+            }
+
+            startPauseBtn.addEventListener('click', toggleTimer);
+            resetBtn.addEventListener('click', resetTimer);
+
+            settingsBtn.addEventListener('click', () => {
+                settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+            });
+
+            saveBtn.addEventListener('click', () => {
+                workTime = (parseInt(workInput.value) || 25) * 60;
+                breakTime = (parseInt(breakInput.value) || 5) * 60;
+                
+                if (isWorkMode) {
+                    timeLeft = workTime;
+                } else {
+                    timeLeft = breakTime;
+                }
+                
+                updateDisplay();
+                settingsPanel.style.display = 'none';
+            });
+
+            header.addEventListener('click', (e) => {
+                if(e.target !== settingsBtn && e.target !== toggleBtn) {
+                    container.classList.toggle('minimized');
+                    toggleBtn.textContent = container.classList.contains('minimized') ? '▲' : '▼';
+                }
+            });
+            
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                container.classList.toggle('minimized');
+                toggleBtn.textContent = container.classList.contains('minimized') ? '▲' : '▼';
+            });
+
+            updateDisplay();
+        });
+    </script>
 </body>
 </html>

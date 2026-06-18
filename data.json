@@ -14,11 +14,6 @@
                 "answer": "Utiliza una única clave secreta tanto para cifrar como para descrifrar la información. Es fundamental que tanto el emisor como el receptor conozcan esta clave de antemano y la mantengan en secreto.\r\n\r\nEl concepto clave es el siguiente: Un único secreto compartido (Ks) se usa tanto para cifrar como para descifrar. Es como si dos mismas personas usaran la misma llave física para una caja fuerte.\r\n\r\nEjemplos de algoritmos simetricos:\r\n-DES: clave de 56 bits, insegura\r\n-3DES: aplica tres veces DES, es lento\r\n-AES: Admite claves de 128, 192 y 256 bits, excelente balance de seguridad y rendimiento.\r\n\r\nEl problema es la distribución de claves:\r\nEn un sistema con N nodos, si cada par de nodos necesita comunicarse de forma segura usando criptografía simetrica, se necesitan  N(N-1) / 2 claves secretas distintas.\r\nPara establecer un canal seguro, necesitamos una clave secreta y para enviar la clave secreta, necesitamos un canal seguro."
             },
             {
-                "id": "1bb65366-0ea5-443b-a88e-e94cd3c1fc95",
-                "question": "Tercero de Confianza (KDC)",
-                "answer": "El KDC es un servidor de confianza que comparte una clave maestra única con cada usuario (Ka, Kb) y genera claves de sesión (Ks) temporales.\r\n\r\nSu funcionamiento es el siguiente:\r\n\r\nPasos 1-2: Alice solicita una clave. El KDC le devuelve Ks y un \"ticket para Bob\",  todo cifrado con la clave de Alice (Ka)\r\nPaso 3: El ticket contiene la clave de sisión y la identidad de Alice, pero cifrado con la clave de Bob. Alice no puede leerlo, solo reenviarselo a Bob.\r\n\r\nProblema:\r\nAtaque de repeticion: Eve intercepta el ticket. Como no tiene fecha de caducidad, puede reenviarselo a Bob mas tarde para suplantar a alice e iniciar una sesion fraudulenta.\r\n\r\nPara solucionar esto se a˜naden Nonces, que son numeros aleatorios de un solo uso, para segurar que los mensajes son recientes. Un reto-respuesta final confirma que ambas partes poseen la clave de sesión."
-            },
-            {
                 "id": "14f87136-6046-428a-921e-430541355e92",
                 "question": "Criptografia Asimetrica: La Magia de las Dos claves",
                 "answer": "La criptografía de clave pública utiliza un par de claves matemáticamente relacionadas (pública y privada). Se basa en la funcion de puerta trampa: una funcion matematica que es facil de calcular en una direccion, pero muy dificil de revertir sin una informacion secreta.\r\n\r\n- Clave publica: se distribuye libremente. Cualquiera puede tenerla. Se usa para cifrar mensajes o verificar firmas.\r\n- Clave privada: Es secreata y solo el propietario la conoce. Se usa para descifrar mensajes o crear firmas.\r\n\r\nAlgoritmos comunes:\r\n-RSA: bsado en la dificultad de factorizar numeros grandes\r\n-ECC: misma seguridad que RSA pero con claves mas cortas\r\n\r\nResuelve el problema de la distribución de claves, sin embargo, es mucho mas cotosa computacionalmente, por lo que a menudo se usa para intercambiar una clave de sesión simetrica y luego seguir con criptografia simetrica."
@@ -47,7 +42,138 @@
                 "id": "7bbe5b1b-d5c2-416b-9a04-a6486b65949b",
                 "question": "El ataque de cumpleanyos",
                 "answer": "La paradoja: En una sala con solo 23 personas, hay más de un 50% de probabilidad de que dos de ellas cumplan el mismo día.\r\nEl ataque: Un atacante no necesita encontrar un mensaje que coincida con el hash de un documento específico, sino encontrar dos mensajes cualesquiera que produzcan el mismo hash.\r\nPara un hash de nbits, un ataque por fuerza bruta se asocia a 2^n intentos, pero para encontrar una colision por ataque de cumpleanyos el coste baja a 2^(n/2)\r\n\r\nEjemplo: Falsificación de un Contrato:\r\n\r\nEve (atacante) quiere que Bob (víctima) firme un contrato fraudulento.\r\npaso1: Eve prepara un contrato legitimo (M1) y uno fraudulento (M2)\r\nPASO2: Eve genera millones de variantes de ambos contratos com cambios sutiles e invisibles.\r\nPaso3: Por la probabilidad de cumpleanyos, Eve encuentra una versiones de M1 y de M2 que tienen el mismo hash."
+            },
+            {
+                "id": "34a7e3e2-49dd-408a-b3a3-15034b5e698b",
+                "question": "Certificado Digital",
+                "answer": "Documento digital firmado por una autoridad de certificacion (CA) de confianza que sirve como credencial de identificacion de una entidad y para su autenticacion.\r\n\r\nCaracteristicas:\r\n- Posee un formato y estructura estandar con los datos de la entidad\r\n- Incluye siempre una fecha de inicio y expiración\r\n- Viene firmado por la CA para garantizar la integridad del mismo\r\n- Requiere de un acuerdo sobre la construccion de las cadenas de certificados."
+            },
+            {
+                "id": "db5e5f3e-3d43-4b59-8ae6-0b044b3f92c8",
+                "question": "AAA",
+                "answer": "Es un marco de referencia arquitectónico que define cómo se debe gestionar el control de acceso a los recursos de un sistema, una red o una infraestructura tecnológica de forma segura y escalable.\r\n\r\nAutenticacion: La autenticacion es el proceso por el que se verifica la identidad del usuario y se garantiza que es quien dice ser. Evita accesos indeseados de usuarios ilegitimos al sistema.\r\nMetodos: login y passwotd o certificados digitales, pin de un solo uso, biometria, aplicaciones extenernas\r\nAutorizacion: La autorizacion es el proceso por el que se valida a que tiene acceso el usuario autenticado. Es el proceso por el que se controla el acceso de un usuario legitimo a determinados recursos del sistema.\r\nAuditoria: se encarga de registrar y auditar toda la actividad del usuario durante su sesion."
+            },
+            {
+                "id": "9a494703-5264-48e5-8b7a-b5bc1b66982f",
+                "question": "AAA en Accion: Conexion a una RED wifi",
+                "answer": "Flujo:\r\n1. Autenticacion: El estudiante introduce sus credenciales, el Punto de Acceso (AP) las encapsula en un mensaje Access-Request y lo envía al servidor RADIUS que las verifica contra su BD.\r\n2. Autorizacion: El servidor RADIUS responde con un Access-Aceept, este mensaje incluye a que VLAN se debe conectar el usuario, el limite de ancho de banda y que puertes puede usar.\r\n3. Contabilidad: el AP envia mensajes de Accounting-Request para notificar al servidor el inicio y fin de la sesion del estudiante."
+            },
+            {
+                "id": "874e3d69-2f67-47d5-955d-64747ab202a4",
+                "question": "Kerberos",
+                "answer": "Protocolo de autenticacion por defecto en Microsoft Active Directory, su objetivo es autenticar usuarios sin enviar nunca la contraseña por red\r\nflujo:\r\nPaso 1: el usuario envía una solicitud al servidor de autenticación (SA) pidiendo acceder a un servicio\r\nPaso 2: El SA valida al usuario y otorga un TGT: ticket-granting-ticket y lo devuelve al usuario cifrado mediante la clave pública del usuario (autenticación)\r\nPaso 3: el usuario descifra el mensaje y envía el TGT con información adicional al servidor de concesión de tickets (TGS - Ticket Granting Server)\r\nPaso 4: el TGS descifra el TGT, realiza la validaciones y crea un ticket de servicio (ST) y lo envía al usuario (autorización)\r\nPaso 5: el usuario descifra el mensaje, crea un mensaje de autenticación y envía el autenticador de usuario y el ticket de autorización al ServicioPaso 6: el servicio realiza su descifrado y validación y crea su propio mensaje de autenticación final con cifrado simétrico"
+            },
+            {
+                "id": "7bf9cb33-a4e9-439d-9027-cb89dfff0267",
+                "question": "OAuth 2.0",
+                "answer": "permite que una aplicacion acceda a recursos en nombre de un usuario sin que el usuario tenga que compartir sus credenciales\r\n\r\nflujo:\r\n1. El usuario quiere que la App cliente accesa a sus datos\r\n2. La App cliente redirige al usuario al Servidor de Autorizacion\r\n3. El servidor de autorizacion devuelve a la App cliente un codigo temporal\r\n4. La App cliente intercambia este codigo por un token de acceso\r\n5. La app cliente usa el token para solicitar los datos al servidor de recursos."
+            },
+            {
+                "id": "c461b298-1322-4ee3-a4ed-ecbd6c195f6d",
+                "question": "Defensa en profundidad (Estrategias de seguridad)",
+                "answer": "La idea central es que ningun mecanismo es infalible.\r\nLa defensa en profundidad es una estrategia que consiste en desplegar multiples capas de controles de seguridad\r\nCapas:\r\n-Permitetro: Firewalls, actuan como una barrera controlando que trafico entra y sale, VPNs, crean un tunel cifrado cuando se accede remotamente\r\n-Red Interna: Los sistemas de deteccion de instrusos monitorizan el trafico buscando actividades sospechosas\r\n-Host: Antivirus, parches de seguridad\r\n-Aplicacion: Validacion de entradas\r\n-Datos: cifrado, copias de seguridad\r\n"
+            },
+            {
+                "id": "b2ec5343-e42c-4207-b14e-96cf70988b77",
+                "question": "Principios de Diseño Seguro",
+                "answer": "Mínimo Privilegio y Seguridad por Defecto: limitan el daño potencial de un\r\nataque, cada usuario y proceso debe operar con el menor conjunto de\r\npermisos necesarios\r\n• Economía de Mecanismos: El diseño de la seguridad debe ser lo más simple\r\nposible, la complejidad es enemiga de la seguridad\r\n• Minimizar la Superficie de Ataque: Reducir puertos abiertos, servicios\r\ninnecesarios activos, código expuesto\r\n• Diseño Abierto (Principio de Kerckhoffs): Los algoritmos no deben ser\r\nsecretos, la seguridad debe estar en la confidencialidad de las claves\r\n• Separacion de Privilegios: requerir varios permisos independientes"
             }
         ]
+    },
+    {
+        "id": "eb73e21b-4798-489c-937e-88a1c15f81f2",
+        "name": "Tiempo y Coordinacion SD",
+        "flashcards": [
+            {
+                "id": "460e6bb5-ef2b-44a8-900f-19e06a5992f0",
+                "question": "Reloj Fisico",
+                "answer": "Un reloj fisico es un reloj de hardaware que tiene cada nodo en un sistema. Este cuenta con un cristal de cuarzo que hace ticks y estos ticks los detecta el sistema operativo y mediante unos calculos matematicos obtenemos los relojes de software. El problema esq este hardware no es perfecto, por lo que puede ser que el reloj se desvie del tiempo real (Deriva) drift."
+            },
+            {
+                "id": "7b9442d8-1254-4ef9-892d-8a8c57786310",
+                "question": "Métodos de Sincronización",
+                "answer": "Contamos con dos metodos de sincronizacion, sincronizacion externa e interna.\r\n\r\n\r\nLa sincronizacion externa se refiere a como un sistema sincroniza su reloj interno mediante una fuenta real de tiempo, siendo normalmente UTC. Metodo de Cristian y NTP\r\n\r\nLa sincronización interna se basa en que todos los nodos del sistema marquen la misma hora en sus relojes interno, sin importar que la hora se ajusta a la hora real. Metodo de Berkeley"
+            },
+            {
+                "id": "b4954f14-1bfa-4f5f-9e9a-00e46a7b8a89",
+                "question": "Metodo de Cristian",
+                "answer": "El metodo de Cristian corresponde a un metodo de sincronizacion externa, donde un sistema se sincroniza con una fuenta real de tiempo, siendo normalmente UTC. El protocolo de sincronizacion es el siguiente.\r\n\r\nEl sistema anota su hora local T0 y envia una mensaje REQUEST al servidor pidiendo la hora real.\r\nEl servidor recibe el mensaje de REQUEST, anota la hora real, Ts, y la devuelve al sistema.\r\nEl sistema recibe la hora real del sistema Ts, y apunta su hora local T1.\r\nPara obtener la hora real, es sistema realiza el siguiente calculo matematico:\r\nHora real:= Ts + (T1 - T0) / 2\r\nSiendo T1 + T0 el tiempo que ha tardado el mensaje de Request en ir y volver, y se divide entre dos porque en este método se asume que el mensaje tarda lo mismo en ir y volver del servidor.\r\nEsto da lugar a que la hora no sea del todo exacta solo una aproximación.\r\n\r\nLa hora real se encuentra en el siguiente intervalo:\r\n[Ts + Tmin, Ts + (T1 - T0) - Tmin]"
+            },
+            {
+                "id": "db81b106-d949-4e25-b3bf-0bb98c06a0a5",
+                "question": "Algoritmo de Berkeley",
+                "answer": "El algoritmo de Berkeley es un metodo de sincronizacion interna, es decir, lo que se busca con este metodo es que todos los nodos de un sistema marquen la misma hora sin importar si la hora es la correcta o no.\r\n\r\nEn este metodo se elige a un Coordinador o Maestro que hara de fuente autorizada de tiempo, y el resto de nodos se les llamará esclavos.\r\n El funcionamiento de sincronizacion es el siguiente:\r\n\r\nEl maestro o Coordinador envia un mensaje de Time_req donde le pregunta a cada nodo la hora local que tienen.\r\nLos esclavos mandan al maestro su hora local, es maestro tambien considera la suya propia.\r\nEl maestro recibe las horas locales de cada uno y descarta los valores atipicos.\r\nEl maestro hace la media de todos los valores obtenidos.\r\nEl maestro envia a cada esclavo su ajuste necesario para que todos los relojes del sistema marquen la misma hora."
+            },
+            {
+                "id": "fb3c06dd-5dcb-4920-a283-804595913d78",
+                "question": "NTP",
+                "answer": " NTP o Network Time Protocol o Protocolo de tiempo de red es un metodo de sincronizacion externa a nivel Internet. Su disenyo esta pensando para un sistema asincrono propenso a fallos.\r\n\r\nNTP usa una version modificada del metodo de cristian, pero usando diferentes servidores para una mayor precision y mayor tolerancia a fallos.\r\n\r\nNTP sigue una jerarquia llamada estratos, donde:\r\n\r\nEstrato 0 es la fuenta autorizada de tiempo, normalmente UTC, no es un servidor NTP\r\nEstrato 1 son los servidores Primarios NTP que se sincronizan directamente con el estrato 0.\r\nEstrato 2 son los servidores Secundarios NTP que se sincronizan con los diferentes servidores primarios para una mayor tolerancia a fallos.\r\nEstrato 3..n son los clientes que se conectan directamente a los servidores secuendarios para sincronizarse."
+            },
+            {
+                "id": "5d1b2d16-24f8-4b73-9914-53812bd8dc3e",
+                "question": "Relojes Logicos",
+                "answer": "Los relojes Lógicos surgen de que la sincronización física perfecta de un sistema asíncrono es teoricamente imposible. Los retardos de los mensajes son variables e impredecibles. Es por eso que Lamport propuso cambiar el enfoque, dejar de preocuparnos por el tiempo real y centrarnos en el orden de los eventos. Esto da lugar al conepto de tiempo logico."
+            },
+            {
+                "id": "122212bc-f1ad-46e8-8ddf-6e74f20b66a6",
+                "question": "Relojes de Lamport",
+                "answer": "El objetivo del algoritmo de Lamport es asignar u numero (marca de tiempo) L(e) a cada evento e, de tal forma que si e -> e', etonces L(e) < L(e')\r\n\r\nLamport define 3 reglas:\r\nRegla 1 R1: antes de ejecutar un evento, el proceso incremente su reloj en 1\r\nRegla 2 R2: al enviar un mensaje, el proceso adjunta su reloj logico al mensaje\r\nRegla 3 R3: Al recibir un mensaje con marca temporal t, el proceso actualiza su reloj para no ir por detras del emisor.\r\n\r\nLos relojes de Lamport garantizan la condicion de reloj lógico: e -> e' => L(e) < L(e')\r\nEl problema es que la implicacion inversa no es cierta. Que un evento tenga una marca de tiempo menor no implica que haya ocurrido antes casualmente. La razon de esta deficiencia es la concurrencia."
+            },
+            {
+                "id": "c2a99bfe-c3b7-4168-b15d-36aa683894f2",
+                "question": "Relojes Vectoriales",
+                "answer": "Los relojes vectoriales surgen para solucionar la deficiencia de los relojes de Lamport.\r\n\r\nSe busca reemplazar el unico contados logico por un vector de contadores\r\n\r\nCada proceso P mantiene un reloj vectorial Vi\r\nVi es un vector de N enteros, siendo Vi[i] el numero de eventos ocurridos en el propio proceso y Vi[j] el conocimineto que Pi tiene sobre los eventos de Pj que han ocurrido casualmente antes de Pi\r\n\r\nReglas de Actualizacion:\r\nTodos los reojes vectorioales se inicializan a 0.\r\n\r\nRegla R1: Antes de ejecutar un evento local, el proceso incrementa su propio componente.\r\nRegla R2: Al enviar el mensaje, adjunta su vector completo.\r\nRegla R3: Al recibir un mensaje se actualiza el vector y se aplica de nuevo la regla R1."
+            },
+            {
+                "id": "666334f9-27f7-4b42-898b-daa52b077392",
+                "question": "Exclusión Mutua",
+                "answer": "Correctitud (Safety): no se puede permitir que dos procesos entre en la seccion critica al mismo tiempo.\r\nVivacidad (Liveness): garantiza que el sistema sigue funcionando. Se divide en dos:\r\nNo deadlock: el sistema no debe llegar a un estado en el que nadie pueda entrar en la SC\r\nNo starvation: Un proceso que quiere entrar a la SC debe poder hacerlo enventualmente\r\n\r\nJusticia (Fairness): las peticiones de entrada se atienden en un orden justo, evitando que procesos se cuelen"
+            },
+            {
+                "id": "fde27e87-7723-4d40-9794-5eb8ed1f630f",
+                "question": "Algoritmo Centralizado (Exclusion Mutua)",
+                "answer": "Hay un coordinador, el algoritmo funciona de la siguiente manera.\r\n\r\nPaso 1: Si un proceso desea entrar en la SC, le envia un mensaje de Request al coordinador\r\nPaso 2: El coordinador recibe el mensaje, si la SC esta disponible le da el OK al proceso, sino lo encola en la cola de procesos en espera de entrar en la SC\r\nPaso 3: Cuando el proceso finaliza su trabajo en la SC, este le envia un mensaje de Release al coordinador, si por alguna razon este mensaje no le llega al coordinador, el sistema entra en deadlock.\r\nPaso 4: Cuando el coordinador recibe el mensaje de Release del proceso que estaba en la SC, revisa la Cola de procesos y si hay alguno esperando le da el Ok al primero."
+            },
+            {
+                "id": "17e096df-2769-4f97-b6d4-972d2cb5312e",
+                "question": "Token Ring (Exclusion Mutua)",
+                "answer": "Token ring, o algoritmo del anillo es un algoritmo distribuido sin coordinador, el cual es organiza en forma de anillo. Se crea un mensaje especial llamado token que viaja por el anillo de proceso en proceso siguiendo un orden logico de Pi a Pi+1.\r\n\r\nEl funcionamiento del anillo es el siguiente:\r\nEl token cirucla libremente por el anillo mientras nadie quiera entrar en la SC.\r\nSi un proceso desea entrar en la SC este debe esperar a que le llegue el token.\r\nCuando el proceso que esperaba el token lo reciba, este se lo guarda y entra en la SC.\r\nCuando sale de la SC, este envia el token al siguiente proceso logico Pi -> Pi+1."
+            },
+            {
+                "id": "29329820-d98e-40bb-883b-27122f53359f",
+                "question": "Ricart-Agrawala (Exclusión Mutua)",
+                "answer": "Algoritmo distribuido Ricart-Agrawala es un algoritmo totalmente distribuido sin lider ni token que usa multicast y marcas de tiempo de Lamport para lograr el consenso.\r\n\r\nEl protocolo para entrar:\r\nPi genera su marca de tiemop de Lamport, ts.\r\nEnvia un mensaje de Request a todos los demas N - 1 procesos\r\nEspera hasta recibir N -1 mensajes de Ok\r\nEl protocolo al recibir un request:\r\nSi pj no esta en la SC y no quiere entrar responde con un Ok\r\nSi pj esta en la sc -> pospone la respuesta\r\nSi pj quiere entrar y esta esperando compara las marcas de tiempo, si la peticion de tiempo de Pi es mas antigua responde con ok, sino pospone la respuesta.\r\nProtocolo para salir:\r\nPi envia un Ok a todos los procesos en su cola de espera."
+            },
+            {
+                "id": "cc7fc866-b393-4961-a541-126e12bb8d12",
+                "question": "Algoritmo Bully",
+                "answer": "Cada proceso tiene un ID unico y cada proceso conoce el ID de los demás.\r\n\r\nLa eleccion de un nuevo lider si un proceso Pi detecta que el coordinador no responde o si el proceso Pi se recupera de un fallo y se re-incorpora al sistema.\r\n\r\nEl protocolo es el siguiente:\r\nPi inicia una eleccion: envia un mensaje de ELECTION a todos los procesos con un ID mas alto que el suyo\r\nPi espera una respuesta (OK o ALIVE)\r\nCASO 1: Si nadie le responde, Pi gana la eleccion y envia un mensaje de COORDINATOR  a todos.\r\nCASO 2: Si recibe un OK de un proceso con un ID mas alto, Pi sabe que el no será el lider. Pi se retira y se espera."
+            },
+            {
+                "id": "a153046b-d8ee-4afe-95b5-1651f1414991",
+                "question": "Algoritmo En Anillo",
+                "answer": "Algoritmo en Anillo, es un algoritmo de eleccion de Coordinador en el que los procesos estan en un anillo lógico, cada proceso conoce a su siguiente vecino.\r\n\r\nEl protocolo es el siguiente:\r\nPi detecta el fallo de un líder. Crea un mensaje de ELECTION que contiene su propio ID y lo envia a su vecino.\r\nCuando un proceso Pj recibue un mensaje de su vecino: añade su propio ID  a la lista y pasa el mensaje a su vecino.\r\nEl mensaje de la vuelta completa al anillo.\r\nCuando el mensaje llega al iniciador Pi elige el ID más alto de la lista como el nuevo lider.\r\nPi envia un mensaje COORDINATOR con el ID del lider para informar a todos del resultado."
+            },
+            {
+                "id": "9f14046f-e2da-4ef1-90e6-64a916cbfb62",
+                "question": "Anillo Optimizado ",
+                "answer": "Anillo optimizado es una optimizacoin de algoritmo en anillo donde no se acumula los ID.\r\n\r\nEl protocolo es el siguiente:\r\nPi detecta una fallo de lider y se marca a si mismo como participante. Envia un mensaje de ELECTION a su vecino.\r\nSi Pj recibe un mensaje ELECTION, compara el ID del mensaje con el suyo, si es menor reenvia el mensaje sin cambiar nada, si es mayor envia un mensaje de ELECTION con su id, y si el id es el suyo entonces el es el ganador.\r\nEl ganador Pj envia un mensaje COORDINATOR con su ID por el anillo."
+            },
+            {
+                "id": "627d3759-023e-43d3-a687-8c892d38647b",
+                "question": "RAFT",
+                "answer": " Raft es un algorimo de eleccion moderno donde todos los nodos pueden ser Follower, Candidate o Leader.\r\n\r\nEl protocolo es el siguiente:\r\nTodos los nodos inician como Followers.\r\nCada Follower tiene un timeout de eleccoin aleatorio\r\nSi un Follower no recibe un hearbeat del lider actual antes de que su timeout expire se convierte en candidate.\r\nEl Candidate inicia un nuevo Termino, se vota a si mismo y envia un Request vote a todos los demas.\r\nSi el candidate recibe una mayoria de votos, se convierte en lider y envia hearbeats a todos para detener otras elecciones.\r\nSi dos candidatos empatan, nadie gana y se inicia una nueva eleccion."
+            },
+            {
+                "id": "fb8b394c-ccb0-42f4-80a0-e098cfb2cf13",
+                "question": "Algoritmo por Invitacion",
+                "answer": "Fase 1: Si un proceso detecta la perdida d eun lider, se declara a si mismo lider y forma su propio grupo\r\nFase 2: cada lider invita periodicamente a lideres de otors grupos\r\nFase 3: Cuando dos lideres se encuentran, uno debe ceder, generalemtne el del ID mas bajo, renuncia y se une al grupo del otro."
+            }
+        ]
+    },
+    {
+        "id": "3c16bdaa-a83f-4234-b999-5b2619eaefc6",
+        "name": "DLT SD",
+        "flashcards": []
     }
 ]

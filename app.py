@@ -50,6 +50,11 @@ def edit_flashcard(syllabus_id, flashcard_id):
         
     return render_template('edit_flashcard.html', syllabus=syllabus, flashcard=flashcard)
 
+@app.route('/syllabus/<syllabus_id>/delete_flashcard/<flashcard_id>', methods=['POST'])
+def delete_flashcard(syllabus_id, flashcard_id):
+    models.delete_flashcard(syllabus_id, flashcard_id)
+    return redirect(url_for('syllabus_view', syllabus_id=syllabus_id))
+
 @app.route('/study/<syllabus_id>')
 def study(syllabus_id):
     syllabus = models.get_syllabus(syllabus_id)

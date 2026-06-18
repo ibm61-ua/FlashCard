@@ -63,3 +63,14 @@ def update_flashcard(syllabus_id, flashcard_id, question, answer):
                     save_data(data)
                     return flashcard
     return None
+
+def delete_flashcard(syllabus_id, flashcard_id):
+    data = load_data()
+    for syllabus in data:
+        if syllabus['id'] == syllabus_id:
+            original_len = len(syllabus['flashcards'])
+            syllabus['flashcards'] = [f for f in syllabus['flashcards'] if f['id'] != flashcard_id]
+            if len(syllabus['flashcards']) < original_len:
+                save_data(data)
+                return True
+    return False

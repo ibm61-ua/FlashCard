@@ -11,6 +11,15 @@
         <p>{{ error }}</p>
     </div>
 {% else %}
+    <div class="study-options" style="text-align: center; margin-bottom: 2rem; display: flex; justify-content: center; gap: 2rem;">
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; background: var(--glass-bg); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+            <input type="radio" name="studyMode" value="sequential" checked id="mode-seq"> Por Orden
+        </label>
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; background: var(--glass-bg); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+            <input type="radio" name="studyMode" value="random" id="mode-rand"> Aleatorio
+        </label>
+    </div>
+
     <div class="study-layout">
         <div class="flashcard-column">
             <!-- Contenedor 3D para la animación -->
@@ -42,7 +51,10 @@
                 <button id="btn-flip" class="btn btn-primary btn-large">Girar Flashcard</button>
                 <div id="evaluation-controls" style="display: none;">
                     <p class="eval-prompt">¿Acertaste?</p>
-                    <button id="btn-next" class="btn btn-success btn-large">Siguiente Flashcard ➔</button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="btn-retry" class="btn btn-secondary btn-large" style="flex: 1;">Volver a intentar</button>
+                        <button id="btn-next" class="btn btn-success btn-large" style="flex: 1;">Siguiente Flashcard ➔</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,20 +65,35 @@
         const flashcards = {{ syllabus.flashcards|tojson }};
         let currentCardIndex = -1;
         let sessionCount = 0;
+        let studyMode = 'sequential';
+        let sequentialIndex = 0;
 
         const questionEl = document.getElementById('current-question');
         const answerEl = document.getElementById('current-answer');
         const cardEl = document.getElementById('flashcard-element');
         const flipBtn = document.getElementById('btn-flip');
         const nextBtn = document.getElementById('btn-next');
+        const retryBtn = document.getElementById('btn-retry');
         const evalControls = document.getElementById('evaluation-controls');
         const userAnswerEl = document.getElementById('user-answer');
         const sessionCountEl = document.getElementById('session-count');
 
-        function loadRandomCard() {
-            // Pick a random card
-            const randomIndex = Math.floor(Math.random() * flashcards.length);
-            currentCardIndex = randomIndex;
+        document.getElementById('mode-seq').addEventListener('change', (e) => {
+            if(e.target.checked) studyMode = 'sequential';
+        });
+        document.getElementById('mode-rand').addEventListener('change', (e) => {
+            if(e.target.checked) studyMode = 'random';
+        });
+
+        function loadCard() {
+            if (flashcards.length === 0) return;
+
+            if (studyMode === 'random') {
+                currentCardIndex = Math.floor(Math.random() * flashcards.length);
+            } else {
+                currentCardIndex = sequentialIndex;
+                sequentialIndex = (sequentialIndex + 1) % flashcards.length;
+            }
             
             // Set text
             questionEl.textContent = flashcards[currentCardIndex].question;
@@ -93,13 +120,26 @@
             sessionCountEl.textContent = sessionCount;
         });
 
+        retryBtn.addEventListener('click', () => {
+            // Un-flip the card
+            cardEl.classList.remove('is-flipped');
+            
+            // Re-enable input and reset buttons
+            userAnswerEl.disabled = false;
+            flipBtn.style.display = 'inline-block';
+            evalControls.style.display = 'none';
+            
+            // Optionally, we don't decrement session count because they are retrying the same flip,
+            // but you might want to. We'll leave it as is.
+        });
+
         nextBtn.addEventListener('click', () => {
-            loadRandomCard();
+            loadCard();
         });
 
         // Load first card on init
         if(flashcards.length > 0) {
-            loadRandomCard();
+            loadCard();
         }
     </script>
 {% endif %}
