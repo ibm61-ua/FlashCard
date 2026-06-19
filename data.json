@@ -174,6 +174,67 @@
     {
         "id": "3c16bdaa-a83f-4234-b999-5b2619eaefc6",
         "name": "DLT SD",
-        "flashcards": []
+        "flashcards": [
+            {
+                "id": "95cb6cea-708c-4df3-84af-1eeab8d9f1d1",
+                "question": "Sistema de Ficheros Distribuidos (DFS)",
+                "answer": "El objetivo principal de un sistema distribuido es compartir recursos, siendo la informacion (archivos) el más relevante. Un DFS emula la funcionalidad de un sistema centralizado, permitiendo que los usuarios accedan a datos dispersos en la red como si fueran locales."
+            },
+            {
+                "id": "54a32c15-2120-4928-a40e-9deaeb9e89e4",
+                "question": "Requerimientos de diseño de un DFS",
+                "answer": "Para ser eficiente, un DFS debe ofrecer transparencia (de acceso, ubicación, movilidad, escala y prestanciones), alta disponibilidad mediante replicación, tolerancia a fallos y seguridad mediante control de acceso y encriptacion."
+            },
+            {
+                "id": "9dcaf10d-be18-49a4-b116-a3228ade463f",
+                "question": "Modelos de Acceso",
+                "answer": "Existes dos modelos básicos: el de caché de datos (acceso local para mayor rendimiento) y el de servicio remoto (las operaciones se ejecutan en el servidor)"
+            },
+            {
+                "id": "50e5a778-3f30-488f-b42d-d5ee0768ce82",
+                "question": "Tecnicas de implementacion: Caché",
+                "answer": "Puede ubicarse en el disco o memoria, tanto del servidor como del cliente. La consistencia se gestiona con estrategias de escritura inmediante (white-through) o retrasada (delayed-write)"
+            },
+            {
+                "id": "a9db90cb-f6dc-42f2-bd99-0b59e2bad514",
+                "question": "Tecnicas de implementacion: Replicacion",
+                "answer": "Consiste en tener múltiples copias en servidores diferentes para aumentar la fiablidad y escalabilidad. Los protocolos incluyen \"escribir en todos/leer de cualquiera\", \"copia primaria\" o \"basado en quorum\"."
+            },
+            {
+                "id": "5a87002c-8713-4529-b3eb-e177f9116be0",
+                "question": "NFS (Network File System)",
+                "answer": "Estándar en redes UNIX que evalúa rutas de acceso componente a componente mediante peticiones LOOKUP. Presenta desafíos de interoperabilidad, como la diferencia en caracteres de fin de línea entre sistemas (LF en UNIX, CRLF en DOS)."
+            },
+            {
+                "id": "0091a48d-a319-4d67-8256-9763b30d3360",
+                "question": "AFS (Andrew File System)",
+                "answer": "Diseñado para una gran escala, utiliza un espacio de nombre compartido e independiente de la ubicación. Implementa una caché agresiva en el cliente y utiliza un mecanismo de promesas de callback para que el servidor notifique cuando un archivo ya no es válido."
+            },
+            {
+                "id": "73d7499e-d2db-477b-ba8b-53b7257ee3cf",
+                "question": "SMB/CIFS",
+                "answer": "Evloución de las API de DOS para red, es un protocolo con estado que utiliza oplocks (bloqueos oportunistas) para permitir que los clientes almacenen datos en caché de forma segura hasta que otro usuario solicite el archivo."
+            },
+            {
+                "id": "69b42838-e1ab-45b1-a4f3-f3f914fe91c9",
+                "question": "Redes Peer-to-Peer(P2P) e IPFS",
+                "answer": "Las redes P2P permiten que los nodos actúen como cliente y servidor simultaneámente, optimizando el ancho de banda y eliminando puntos unicos de fallos.\r\n\r\nPresenta las siguientes ventajas:\r\nEscalabilidad\r\n• Cuantos más nodos mejor será su funcionamiento y mayor los recursos totales del sistema aumentan.\r\nRobustez.\r\n• En caso de fallos en las réplicas, los peers encuentran la información sin hacer peticiones a ningún servidor\r\ncentralizado de indexado; no hay ningún punto singular de falla en el sistema.\r\nDescentralización.\r\n• Por definición, descentralizadas y todos los nodos son iguales.\r\n• No existen nodos con funciones especiales o imprescindible para el funcionamiento de la red.\r\nDistribución de costes entre los usuarios.\r\n• Se comparten o donan recursos a cambio de recursos. Según la aplicación de la red, los recursos pueden\r\nser archivos, ancho de banda, ciclos de proceso o almacenamiento de disco.\r\nAnonimato.\r\n• Es deseable que quede anónimo el autor de un contenido, el editor, el lector, el servidor que lo alberga y la\r\npetición para encontrarlo, siempre que así lo necesiten los usuarios.\r\n• Son incompatibles con la industria (DRM) para limitarlo.\r\nSeguridad.\r\n• Identificar y evitar los nodos o contenido maliciosos o infectado.\r\n• Creación de grupos seguros de nodos dentro de la red\r\n\r\nIPFS es un sistema P2P de alto rendimiento donde los archivos se identifican por sus valores hash en lugar de rutas, lo que ayuda a prevenir ataques DDoS"
+            },
+            {
+                "id": "4515f387-5478-4cd0-a65a-3f129d326d54",
+                "question": "Tecnologias DLT y Blockchain",
+                "answer": "La tecnología de Blockchain es un tip de DLT más popular y se define como un libro de registro digital compuesto por una cadena de bloques anclados criptográficamente.\r\nLas propiedas clave de Blockchain son las siguientes:\r\nEs inmutable (solo permite anyadir, no borrar ni modificar)\r\nDescentralizada (multiples copias en la comunidad)\r\nTrasparente\r\nConsenso y control: para anaydir bloques, se resuelven desafios matematicos mediante algoritmos como PoW o PoS."
+            },
+            {
+                "id": "e134ec35-51de-4996-84ab-468a8cf12120",
+                "question": "Smart Contracts:",
+                "answer": "Son algoritmos que ejecutan acciones automáticamente cuando se cumplen ciertas condiciones en la cadena, eliminando intermediarios en procesos estructurados como seguros o trazabilidad alimentaria\r\n\r\nCasos de uso\r\n• Seguros: Devolución inmediata de importe de viaje, en caso de retraso en la llegada > 1h\r\n• Testamentos: En caso de fallecimiento, reparto automático de bienes según testamento\r\n• Trazabilidad y control caducidad de los alimentos: valor añadido para el cliente\r\n• Compliance: auditoría de procesos, buenas prácticas, RGPD,"
+            },
+            {
+                "id": "ef28a68e-81a2-4949-92b2-33f5ca059d94",
+                "question": "NFT",
+                "answer": "Utilizan la blockchain como registro de propiedad y cetfiicado de autenticidad para activos digitales unicos."
+            }
+        ]
     }
 ]
